@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = ".root", ".root.targets", "{C9C9F8B0-11AE-4685-90D5-E191CF26CB36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.Sql.Core", "Subatomix.Sql.Core\Subatomix.Sql.Core.csproj", "{5A64A5D5-2483-4894-855F-30A46DA1BBBD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Subatomix.Sql.Core.Tests", "Subatomix.Sql.Core.Tests\Subatomix.Sql.Core.Tests.csproj", "{D6013104-EB84-49B6-A9BC-80491C03F9A9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9C9F8B0-11AE-4685-90D5-E191CF26CB36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9C9F8B0-11AE-4685-90D5-E191CF26CB36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A64A5D5-2483-4894-855F-30A46DA1BBBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A64A5D5-2483-4894-855F-30A46DA1BBBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A64A5D5-2483-4894-855F-30A46DA1BBBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A64A5D5-2483-4894-855F-30A46DA1BBBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6013104-EB84-49B6-A9BC-80491C03F9A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6013104-EB84-49B6-A9BC-80491C03F9A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6013104-EB84-49B6-A9BC-80491C03F9A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6013104-EB84-49B6-A9BC-80491C03F9A9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C31F4908-364C-43AF-B862-DA2FE97532ED}
+	EndGlobalSection
+EndGlobal
