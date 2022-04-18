@@ -21,19 +21,86 @@ namespace Subatomix.Sql.Core;
 
 using static RegexOptions;
 
-internal class SqlCmdPreprocessor
+/// <summary>
+///   A minimal <c>sqlcmd</c>-style preprocessor.
+/// </summary>
+/// <remarks>
+///   <para>
+///     This type supports a limited subset of <c>sqlcmd</c> preprocessing features:
+///   </para>
+///   <list type="table">
+///     <item>
+///       <term><c>GO</c></term>
+///       <description>batch separator</description>
+///     </item>
+///     <item>
+///       <term><c>$()</c></term>
+///       <description><c>sqlcmd</c> variable expansion</description>
+///     </item>
+///     <item>
+///       <term><c>:setvar</c></term>
+///       <description>set a <c>sqlcmd</c> variable</description>
+///     </item>
+///     <item>
+///       <term><c>:r</c></term>
+///       <description>include a file</description>
+///     </item>
+///   </list>
+///   <para>
+///     For more information, see
+///     <a href="https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility">the documentation</a>
+///     for the <c>sqlcmd</c> utility.
+///   </para>
+/// </remarks>
+public class SqlCmdPreprocessor
 {
     private readonly Dictionary<string, string> _variables;
     private          StringBuilder?             _builder;
 
+    /// <summary>
+    ///   Initializes a new <see cref="SqlCmdPreprocessor"/> instance.
+    /// </summary>
     public SqlCmdPreprocessor()
     {
         _variables = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    ///   Gets the collection of <c>sqlcmd</c> variables currently defined.
+    /// </summary>
     public IDictionary<string, string> Variables
         => _variables;
 
+    /// <summary>
+    ///   Preprocesses the specified text.
+    /// </summary>
+    /// <param name="text">
+    ///   The text to be preprocessed.
+    /// </param>
+    /// <param name="name">
+    ///   <para>
+    ///     The logical name of the file containing <paramref name="text"/>, or
+    ///     <see langword="null"/> to use the default name, <c>"(script)"</c>.
+    ///   </para>
+    ///   <para>
+    ///     This value is informational only and need not be a valid file name.
+    ///   </para>
+    ///   <para>
+    ///     Currently, this parameter is not used.  In the future, it might be
+    ///     used to augment exceptions with text locations of errors.
+    ///   </para>
+    /// </param>
+    /// <returns>
+    ///   The result of preprocessing <paramref name="text"/>, split into
+    ///   <c>GO</c>-separated batches.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///   <paramref name="text"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="SqlCmdException">
+    ///   The preprocessor encountered an error in the usage of a <c>sqlcmd</c>
+    ///   feature.
+    /// </exception>
     public IEnumerable<string> Process(string text, string? name = null)
     {
         if (text == null)
