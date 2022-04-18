@@ -66,6 +66,16 @@ public class SqlCmdException : Exception
     /// <param name="context">
     ///   Contextual information about the deserialization operation.
     /// </param>
+    /// <remarks>
+    ///   ⚠ <strong>WARNING:</strong> The <c>BinaryFormatter</c> type is
+    ///   dangerous and is <strong><em>not</em></strong> recommended for data
+    ///   processing.  Applications should stop using <c>BinaryFormatter</c> as
+    ///   soon as possible, even if they believe the data they are processing
+    ///   to be trustworthy.  <c>BinaryFormatter</c> is insecure and cannot be
+    ///   made secure.
+    ///   <a href="https://docs.microsoft.com/en-us/dotnet/standard/serialization/binaryformatter-security-guide">See here for more information.</a>.
+    /// </remarks>
+    [Obsolete("BinaryFormatter serialization is insecure and cannot be made secure.")]
     protected SqlCmdException(SerializationInfo info, StreamingContext context)
         : base(info, context) { }
 }
