@@ -21,6 +21,13 @@ using static System.Reflection.BindingFlags;
 
 namespace Subatomix.Testing;
 
+// Squelch Visual Studio's incorrect hint to remove the next suppression
+#pragma warning disable IDE0079
+
+// Allow obsolete BinaryFormatter to test legacy deserialization constructor
+// https://docs.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0011
+#pragma warning disable SYSLIB0011
+
 public abstract class ExceptionTests<T>
     where T : Exception
 {
@@ -78,8 +85,7 @@ public abstract class ExceptionTests<T>
     [Test]
     public virtual void Construct_MessageAndInnerException_NullInnerException()
     {
-        var innerException = new InvalidProgramException();
-        var exception      = Create(ArcaneMessage, null as Exception);
+        var exception = Create(ArcaneMessage, null as Exception);
 
         exception.Message       .Should().BeSameAs(ArcaneMessage);
         exception.InnerException.Should().BeNull();
@@ -136,23 +142,16 @@ public abstract class ExceptionTests<T>
 
     private static T Roundtrip(T obj)
     {
-        // Allow obsolete BinaryFormatter to test legacy deserialization constructor
-        // https://docs.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0011
-        #pragma warning disable SYSLIB0011
+        using var memory = new MemoryStream();
 
-        using (var memory = new MemoryStream())
-        {
-            // Serialize
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(memory, obj);
+        // Serialize
+        var formatter = new BinaryFormatter();
+        formatter.Serialize(memory, obj);
 
-            // Rewind
-            memory.Position = 0;
+        // Rewind
+        memory.Position = 0;
 
-            // Deserialize
-            return (T) formatter.Deserialize(memory);
-        }
-
-        #pragma warning restore SYSLIB0011
+        // Deserialize
+        return (T) formatter.Deserialize(memory);
     }
 }

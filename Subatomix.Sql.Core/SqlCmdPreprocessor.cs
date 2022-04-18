@@ -224,7 +224,7 @@ internal class SqlCmdPreprocessor
             _variables[name] = Unquote(value);
     }
 
-    internal string Unquote(string value)
+    internal static string Unquote(string value)
     {
         const char
             Quote = '"';
@@ -382,7 +382,7 @@ internal class SqlCmdPreprocessor
             => builder.Append(Text, start, end - start);
     }
 
-    private static readonly Regex TokenRegex = new Regex(
+    private static readonly Regex TokenRegex = new(
         @"
             '    ( [^']  | ''   )*      ( '     | \z ) |    # string
             \[   ( [^\]] | \]\] )*      ( \]    | \z ) |    # quoted identifier
@@ -400,14 +400,14 @@ internal class SqlCmdPreprocessor
         Options
     );
 
-    private static readonly Regex VariableRegex = new Regex(
+    private static readonly Regex VariableRegex = new(
         @"
             \$\( (?<name>\w+) \)
         ",
         Options
     );
 
-    private static readonly Regex IncludeRegex = new Regex(
+    private static readonly Regex IncludeRegex = new(
         @"
             \A [ \t]+
 
@@ -420,7 +420,7 @@ internal class SqlCmdPreprocessor
         Options
     );
 
-    private static readonly Regex SetVariableRegex = new Regex(
+    private static readonly Regex SetVariableRegex = new(
         @"
             \A [ \t]+
 

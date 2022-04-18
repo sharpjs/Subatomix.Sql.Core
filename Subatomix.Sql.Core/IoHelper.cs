@@ -28,13 +28,13 @@ internal static class IoHelper
 
     internal static string ReadText(string path)
     {
-        using (var stream = Open(path))
-        {
-            var encoding = DetectEncoding(stream);
+        using var stream = Open(path);
 
-            using (var reader = new StreamReader(stream, encoding, /*detect:*/ false))
-                return reader.ReadToEnd();
-        }
+        var encoding = DetectEncoding(stream);
+
+        using var reader = new StreamReader(stream, encoding, /*detect:*/ false);
+
+        return reader.ReadToEnd();
     }
 
     private static Encoding DetectEncoding(FileStream stream)
