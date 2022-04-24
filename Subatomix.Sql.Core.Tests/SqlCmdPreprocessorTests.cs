@@ -417,7 +417,7 @@ public class SqlCmdPreprocessorTests
 
     [Test]
     [TestCaseSource(nameof(EolEofCases))]
-    public void Process_Include_Normal(string eol, string eof)
+    public void Process_Include_Unquoted(string eol, string eof)
     {
         using var file = new TemporaryFile();
 
@@ -438,6 +438,59 @@ public class SqlCmdPreprocessorTests
                 "b", eof
             )
         );
+    }
+
+    [Test]
+    [TestCaseSource(nameof(EolEofCases))]
+    public void Process_Include_Unquoted_Invalid(string eol, string eof)
+    {
+        var preprocessor = new SqlCmdPreprocessor { };
+
+        var text = Lines(eol, eof, ":r foo bar baz");
+
+        preprocessor
+            .Invoking(p => p.Process(text).Count())
+            .Should().Throw<SqlCmdException>()
+            .WithMessage("Invalid syntax in :r directive.");
+    }
+
+    [Test]
+    [TestCaseSource(nameof(EolEofCases))]
+    public void Process_Include_DoubleQuoted_Normal(string eol, string eof)
+    {
+        using var file = new TemporaryFile();
+
+        file.Write(Lines(eol, eof,
+            "included"
+        ));
+
+        var preprocessor = new SqlCmdPreprocessor { };
+
+        var batches = preprocessor.Process(
+            Lines(eol, eof, "a", $@":r ""{file.Path}""", "b")
+        );
+
+        batches.Should().Equal(
+            Batch(
+                "a", eol,
+                "included", eof,
+                "b", eof
+            )
+        );
+    }
+
+    [Test]
+    [TestCaseSource(nameof(EolEofCases))]
+    public void Process_Include_DoubleQuoted_Unterminated(string eol, string eof)
+    {
+        var preprocessor = new SqlCmdPreprocessor { };
+
+        var text = Lines(eol, eof, @":r ""bar");
+
+        preprocessor
+            .Invoking(p => p.Process(text).Count())
+            .Should().Throw<SqlCmdException>()
+            .WithMessage("Unterminated double-quoted string.");
     }
 
     [Test]
