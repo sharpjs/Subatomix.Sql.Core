@@ -44,6 +44,7 @@
     <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <!-- Packaging properties -->
