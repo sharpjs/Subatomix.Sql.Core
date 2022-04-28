@@ -333,8 +333,8 @@ public class SqlCmdPreprocessor
 
     private void PerformVariableReplacement(StringBuilder builder, string text)
     {
-        var start   = 0;
-        var length  = text.Length;
+        var start  = 0;
+        var length = text.Length;
 
         while (start < length)
         {
