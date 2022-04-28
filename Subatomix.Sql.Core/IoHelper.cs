@@ -52,8 +52,7 @@ internal static class IoHelper
         stream.Seek(0, SeekOrigin.Begin);
 
         // Use the detected encoding if it has the desired options already
-        if (encoding.EncoderFallback is EncoderExceptionFallback &&
-            encoding.DecoderFallback is DecoderExceptionFallback)
+        if (HasExceptionFallbacks(encoding))
             return encoding;
 
         // Otherwise, ensure the encoding is writable so the options can be changed
@@ -98,5 +97,11 @@ internal static class IoHelper
             Path.DirectorySeparatorChar.ToString(),
             RegexOptions.CultureInvariant
         );
+    }
+
+    internal static bool HasExceptionFallbacks(Encoding encoding)
+    {
+        return encoding.EncoderFallback is EncoderExceptionFallback
+            && encoding.DecoderFallback is DecoderExceptionFallback;
     }
 }
