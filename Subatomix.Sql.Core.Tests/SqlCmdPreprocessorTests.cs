@@ -363,7 +363,6 @@ public class SqlCmdPreprocessorTests
     }
 
     [Test]
-    [Ignore("SqlCmd behavior not yet supported.")]
     [TestCaseSource(nameof(EolEofCases))]
     public void Process_SetVariable_Unquoted_WithComment(string eol, string eof)
     {
@@ -387,7 +386,7 @@ public class SqlCmdPreprocessorTests
             )
         );
 
-        preprocessor.Variables["foo"].Should().Be("bar");
+        preprocessor.Variables["foo"].Should().Be("bar/**/");
     }
 
     [Test]
@@ -446,7 +445,6 @@ public class SqlCmdPreprocessorTests
     }
 
     [Test]
-    [Ignore("SqlCmd behavior not yet supported.")]
     [TestCaseSource(nameof(EolEofCases))]
     public void Process_SetVariable_DoubleQuoted_WithComment(string eol, string eof)
     {
@@ -470,7 +468,7 @@ public class SqlCmdPreprocessorTests
             )
         );
 
-        preprocessor.Variables["foo"].Should().Be("bar");
+        preprocessor.Variables["foo"].Should().Be("bar/**/");
     }
 
     [Test]
@@ -516,7 +514,6 @@ public class SqlCmdPreprocessorTests
 
     [Test]
     [TestCaseSource(nameof(EolEofCases))]
-    [Ignore("SqlCmd behavior not yet supported.")]
     public void Process_Include_Unquoted_WithComment(string eol, string eof)
     {
         using var file = new TemporaryFile();
@@ -580,7 +577,6 @@ public class SqlCmdPreprocessorTests
     }
 
     [Test]
-    [Ignore("SqlCmd behavior not yet supported.")]
     [TestCaseSource(nameof(EolEofCases))]
     public void Process_Include_DoubleQuoted_WithComment(string eol, string eof)
     {

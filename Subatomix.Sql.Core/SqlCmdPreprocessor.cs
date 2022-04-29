@@ -472,7 +472,7 @@ public class SqlCmdPreprocessor
             |        "" ( [^""] | """" )* ( "" | \z )   # quoted
             )
 
-            [ \t]* \z
+            [ \t]* (-- .*)? \z
         ",
         Options
     );
@@ -489,7 +489,7 @@ public class SqlCmdPreprocessor
                 )
             )?
 
-            [ \t]* \z
+            [ \t]* (-- .*)? \z
         ",
         Options
     );
