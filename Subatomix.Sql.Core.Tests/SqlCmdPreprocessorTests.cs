@@ -234,6 +234,24 @@ public class SqlCmdPreprocessorTests
     }
 
     [Test]
+    [TestCaseSource(nameof(EolEofCases))]
+    public void Process_VariableReplacement_WithComments(string eol, string eof)
+    {
+        var preprocessor = new SqlCmdPreprocessor
+        {
+            Variables = { ["foo"] = "bar" }
+        };
+
+        var batches = preprocessor.Process(
+            Lines(eol, eof, "a $(FOO) b /* $(FOO) */ $(FOO) -- $(FOO)")
+        );
+
+        batches.Should().Equal(
+            Lines(eol, eof, "a bar b /* $(FOO) */ bar -- $(FOO)")
+        );
+    }
+
+    [Test]
     public void Process_VariableReplacement_Undefined()
     {
         var preprocessor = new SqlCmdPreprocessor { };
@@ -345,6 +363,34 @@ public class SqlCmdPreprocessorTests
     }
 
     [Test]
+    [Ignore("SqlCmd behavior not yet supported.")]
+    [TestCaseSource(nameof(EolEofCases))]
+    public void Process_SetVariable_Unquoted_WithComment(string eol, string eof)
+    {
+        var preprocessor = new SqlCmdPreprocessor
+        {
+            Variables = { ["foo"] = "original value" }
+        };
+
+        var batches = preprocessor.Process(
+            Lines(eol, eof,
+                @"a",
+                @":setvar foo bar/**/ -- comment",
+                @"b $(FOO) c"
+            )
+        );
+
+        batches.Should().Equal(
+            Batch(
+                @"a",           eol,
+                @"b bar/**/ c", eof
+            )
+        );
+
+        preprocessor.Variables["foo"].Should().Be("bar");
+    }
+
+    [Test]
     [TestCaseSource(nameof(EolEofCases))]
     public void Process_SetVariable_Unquoted_Invalid(string eol, string eof)
     {
@@ -400,6 +446,34 @@ public class SqlCmdPreprocessorTests
     }
 
     [Test]
+    [Ignore("SqlCmd behavior not yet supported.")]
+    [TestCaseSource(nameof(EolEofCases))]
+    public void Process_SetVariable_DoubleQuoted_WithComment(string eol, string eof)
+    {
+        var preprocessor = new SqlCmdPreprocessor
+        {
+            Variables = { ["foo"] = "original value" }
+        };
+
+        var batches = preprocessor.Process(
+            Lines(eol, eof,
+                @"a",
+                @":setvar foo ""bar/**/"" -- comment",
+                @"b $(FOO) c"
+            )
+        );
+
+        batches.Should().Equal(
+            Batch(
+                @"a",           eol,
+                @"b bar/**/ c", eof
+            )
+        );
+
+        preprocessor.Variables["foo"].Should().Be("bar");
+    }
+
+    [Test]
     [TestCaseSource(nameof(EolEofCases))]
     public void Process_SetVariable_DoubleQuoted_Unterminated(string eol, string eof)
     {
@@ -442,6 +516,32 @@ public class SqlCmdPreprocessorTests
 
     [Test]
     [TestCaseSource(nameof(EolEofCases))]
+    [Ignore("SqlCmd behavior not yet supported.")]
+    public void Process_Include_Unquoted_WithComment(string eol, string eof)
+    {
+        using var file = new TemporaryFile();
+
+        file.Write(Lines(eol, eof,
+            "included"
+        ));
+
+        var preprocessor = new SqlCmdPreprocessor { };
+
+        var batches = preprocessor.Process(
+            Lines(eol, eof, "a", $":r {file.Path} -- comment", "b")
+        );
+
+        batches.Should().Equal(
+            Batch(
+                "a", eol,
+                "included", eof,
+                "b", eof
+            )
+        );
+    }
+
+    [Test]
+    [TestCaseSource(nameof(EolEofCases))]
     public void Process_Include_Unquoted_Invalid(string eol, string eof)
     {
         var preprocessor = new SqlCmdPreprocessor { };
@@ -468,6 +568,32 @@ public class SqlCmdPreprocessorTests
 
         var batches = preprocessor.Process(
             Lines(eol, eof, "a", $@":r ""{file.Path}""", "b")
+        );
+
+        batches.Should().Equal(
+            Batch(
+                "a", eol,
+                "included", eof,
+                "b", eof
+            )
+        );
+    }
+
+    [Test]
+    [Ignore("SqlCmd behavior not yet supported.")]
+    [TestCaseSource(nameof(EolEofCases))]
+    public void Process_Include_DoubleQuoted_WithComment(string eol, string eof)
+    {
+        using var file = new TemporaryFile();
+
+        file.Write(Lines(eol, eof,
+            "included"
+        ));
+
+        var preprocessor = new SqlCmdPreprocessor { };
+
+        var batches = preprocessor.Process(
+            Lines(eol, eof, "a", $@":r ""{file.Path}"" -- comment", "b")
         );
 
         batches.Should().Equal(
