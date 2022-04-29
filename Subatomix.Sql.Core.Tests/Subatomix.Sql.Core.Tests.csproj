@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Using Include="FluentAssertions" />
+    <Using Include="FluentAssertions.FluentActions" Static="true" />
     <Using Include="NUnit.Framework" />
     <Using Include="Subatomix.Testing" />
   </ItemGroup>
