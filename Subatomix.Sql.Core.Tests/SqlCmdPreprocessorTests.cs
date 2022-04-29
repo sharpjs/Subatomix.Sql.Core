@@ -352,7 +352,7 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch(
-                @"a",                                          eol,
+                @"a",                                         eol,
                 @"b qux~`!@#$%^&*()-_=+[{]}\|;:',<.>/?ほげ c", eof
             )
         );
@@ -507,9 +507,9 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch(
-                "a", eol,
+                "a",        eol,
                 "included", eof,
-                "b", eof
+                "b",        eof
             )
         );
     }
@@ -533,9 +533,9 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch(
-                "a", eol,
+                "a",        eol,
                 "included", eof,
-                "b", eof
+                "b",        eof
             )
         );
     }
@@ -572,9 +572,9 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch(
-                "a", eol,
+                "a",        eol,
                 "included", eof,
-                "b", eof
+                "b",        eof
             )
         );
     }
@@ -598,9 +598,9 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch(
-                "a", eol,
+                "a",        eol,
                 "included", eof,
-                "b", eof
+                "b",        eof
             )
         );
     }
@@ -644,11 +644,11 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch(
-                "a", eol,
-                "b", eol,
+                "a",        eol,
+                "b",        eol,
                 "included", eof,
-                "c", eof,
-                "d", eof
+                "c",        eof,
+                "d",        eof
             )
         );
     }
@@ -727,7 +727,7 @@ public class SqlCmdPreprocessorTests
         batches.Should().Equal(
             // Batch begins in top level and ends in included
             Batch(
-                "beg", eol,
+                "beg",    eol,
                 "file.a", eol
             ),
             // Batch begins in included and ends in same included
@@ -737,7 +737,7 @@ public class SqlCmdPreprocessorTests
             // Batch begins in included and ends in top level
             Batch(
                 "file.c", eof,
-                "end", eof
+                "end",    eof
             )
         );
     }
@@ -767,7 +767,7 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch("included", eol),
-            Batch("main", eof)
+            Batch("main",     eof)
         );
     }
 
@@ -796,7 +796,7 @@ public class SqlCmdPreprocessorTests
 
         batches.Should().Equal(
             Batch("included", eof),
-            Batch("main", eof)
+            Batch("main",     eof)
         );
     }
 
