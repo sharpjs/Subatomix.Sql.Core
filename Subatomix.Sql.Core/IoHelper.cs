@@ -65,8 +65,8 @@ internal static class IoHelper
             encoding = (Encoding) encoding.Clone();
 
         // Set desired options
-        encoding.EncoderFallback = new EncoderExceptionFallback();
-        encoding.DecoderFallback = new DecoderExceptionFallback();
+        encoding.EncoderFallback = EncoderFallback.ExceptionFallback;
+        encoding.DecoderFallback = DecoderFallback.ExceptionFallback;
 
         return encoding;
     }
