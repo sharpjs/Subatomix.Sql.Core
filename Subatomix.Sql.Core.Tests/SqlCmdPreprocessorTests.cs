@@ -668,7 +668,7 @@ public class SqlCmdPreprocessorTests
 
         file1.Write(Lines(eol, eof,
             "file1.a",
-            "GO",
+            "go",
             "file1.b"
         ));
 
@@ -712,7 +712,7 @@ public class SqlCmdPreprocessorTests
             "file.a",
             "GO",
             "file.b",
-            "GO",
+            "go",
             "file.c"
         ));
 
@@ -799,6 +799,49 @@ public class SqlCmdPreprocessorTests
             Batch("main",     eof)
         );
     }
+
+    [Test]
+    [TestCase(@"",           @""    )]
+    [TestCase(@"a",          @"a"   )]
+    [TestCase(@"""""",       @""    )]
+    [TestCase(@"""a""",      @"a"   )]
+    [TestCase(@"""a""""b""", @"a""b")]
+    public void Unquote(string input, string expected)
+    {
+        SqlCmdPreprocessor.Unquote(input).Should().Be(expected);
+    }
+
+    [Test]
+    [TestCase(@"""")]
+    [TestCase(@"""a")]
+    public void Unquote_Unterminated(string input)
+    {
+        Invoking(() => SqlCmdPreprocessor.Unquote(input))
+            .Should().Throw<SqlCmdException>()
+            .WithMessage("Unterminated double-quoted string.");
+    }
+
+    [Test]
+    [TestCase(0)]
+    [TestCase(MinimumBuilderCapacity - 1)]
+    [TestCase(MinimumBuilderCapacity)]
+    public void GetPreferredBuilderCapacity_NotAboveMinimum(int length)
+    {
+        SqlCmdPreprocessor.GetPreferredBuilderCapacity(length)
+            .Should().Be(MinimumBuilderCapacity);
+    }
+
+    [Test]
+    public void GetPreferredBuilderCapacity_AboveMinimum()
+    {
+        const int Length = MinimumBuilderCapacity + 1;
+
+        SqlCmdPreprocessor.GetPreferredBuilderCapacity(Length)
+            .Should().BeGreaterThanOrEqualTo(Length);
+    }
+
+    private const int MinimumBuilderCapacity
+        = SqlCmdPreprocessor.MinimumBuilderCapacity;
 
     private static readonly string[][] EolEofCases =
     {

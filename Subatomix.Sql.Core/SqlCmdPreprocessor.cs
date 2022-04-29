@@ -55,6 +55,9 @@ using static RegexOptions;
 /// </remarks>
 public class SqlCmdPreprocessor
 {
+    // Minimum initial capacity of StringBuilder when needed
+    internal const int MinimumBuilderCapacity = 4096;
+
     private readonly Dictionary<string, string> _variables;
     private          StringBuilder?             _builder;
 
@@ -370,13 +373,9 @@ public class SqlCmdPreprocessor
 
     private StringBuilder InitializeBuilder(int start, int end, int length)
     {
-        const int MinimumBufferSize = 4096;
-
         // Calculate sizes
         length = (end > 0 ? end : length) - start;
-        var capacity = length < MinimumBufferSize
-            ? MinimumBufferSize
-            : GetNextPowerOf2Saturating(length);
+        int capacity = GetPreferredBuilderCapacity(length);
 
         var builder = _builder;
         if (builder == null)
@@ -394,7 +393,14 @@ public class SqlCmdPreprocessor
         return builder;
     }
 
-    private class Input
+    internal static int GetPreferredBuilderCapacity(int length)
+    {
+        return length < MinimumBuilderCapacity
+            ? MinimumBuilderCapacity
+            : GetNextPowerOf2Saturating(length);
+    }
+
+    internal class Input
     {
         public Input(string name, string text, Input? parent = null)
         {
