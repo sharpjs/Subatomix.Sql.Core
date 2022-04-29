@@ -51,9 +51,14 @@ internal static class IoHelper
         // Undo whatever reads were performed to detect the encoding
         stream.Seek(0, SeekOrigin.Begin);
 
+#if DOTNET_CHANGES_DEFAULT_FALLBACK
+        // .NET uses replacement fallback by default, so this shortcut will
+        // never be taken.  Code here for intent, but #if'd out for coverage.
+
         // Use the detected encoding if it has the desired options already
         if (HasExceptionFallbacks(encoding))
             return encoding;
+#endif
 
         // Otherwise, ensure the encoding is writable so the options can be changed
         if (encoding.IsReadOnly)
@@ -97,11 +102,5 @@ internal static class IoHelper
             Path.DirectorySeparatorChar.ToString(),
             RegexOptions.CultureInvariant
         );
-    }
-
-    internal static bool HasExceptionFallbacks(Encoding encoding)
-    {
-        return encoding.EncoderFallback is EncoderExceptionFallback
-            && encoding.DecoderFallback is DecoderExceptionFallback;
     }
 }
